@@ -9,7 +9,25 @@ enum GridEntry {
 
 fn main() {
     let grid: Vec<Vec<GridEntry>> = init_grid();
-    show_grid(grid);
+
+    show_grid(&grid);
+
+    while !check_grid(&grid) {
+        println!("---------------------------------------- X TURN ----------------------------------------------");
+        println!("");
+
+        // ask user to make move
+
+        show_grid(&grid);
+
+
+        println!("---------------------------------------- O TURN ----------------------------------------------");
+        println!("");
+
+        // make random move (implement MinMax later)
+
+        show_grid(&grid);
+    }
 }
 
 fn init_grid() -> Vec<Vec<GridEntry>> {
@@ -30,7 +48,7 @@ fn init_grid() -> Vec<Vec<GridEntry>> {
     return grid;
 }
 
-fn show_grid(grid: Vec<Vec<GridEntry>>) {
+fn show_grid(grid: &Vec<Vec<GridEntry>>) {
 
     for y in 0..3 {
         for x in 0..3 {
@@ -75,7 +93,7 @@ fn make_a_move(x: usize, y: usize, grid_move: GridEntry, grid: &mut Vec<Vec<Grid
     return true;
 }
 
-fn check_grid(grid: Vec<Vec<GridEntry>>) -> bool {
+fn check_grid(grid: &Vec<Vec<GridEntry>>) -> bool {
 
     for i in 0..3 {
         if grid[i][0] != GridEntry::EMPTY && grid[i][0] == grid[i][1] && grid[i][0] == grid[i][2] { return true; }
