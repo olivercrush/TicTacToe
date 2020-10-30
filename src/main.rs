@@ -23,11 +23,9 @@ fn init_grid() -> Vec<Vec<GridEntry>> {
         grid.push(r);
     }
 
-    random_move(GridEntry::X, &mut grid);
-    random_move(GridEntry::O, &mut grid);
-    random_move(GridEntry::X, &mut grid);
-    random_move(GridEntry::O, &mut grid);
-    random_move(GridEntry::X, &mut grid);
+    make_a_move(0, 0, GridEntry::X, &mut grid);
+    make_a_move(1, 1, GridEntry::X, &mut grid);
+    make_a_move(2, 2, GridEntry::X, &mut grid);
 
     return grid;
 }
@@ -64,6 +62,17 @@ fn random_move(grid_move: GridEntry, grid: &mut Vec<Vec<GridEntry>>) {
         }
     }
 
+}
+
+fn make_a_move(x: usize, y: usize, grid_move: GridEntry, grid: &mut Vec<Vec<GridEntry>>) -> bool {
+
+    if x > 2 { return false; }
+    if y > 2 { return false; }
+
+    if grid[x][y] != GridEntry::EMPTY { return false; }
+
+    grid[x][y] = grid_move;
+    return true;
 }
 
 fn check_grid(grid: Vec<Vec<GridEntry>>) -> bool {
