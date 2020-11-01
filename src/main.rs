@@ -15,7 +15,6 @@ fn main() {
 
     while !check_grid(&grid) {
         println!("---------------------------------------- X TURN ----------------------------------------------");
-        println!("");
 
         let mut x_move: String = String::new();
         let mut y_move: String = String::new();
@@ -47,15 +46,20 @@ fn main() {
             valid_move = make_a_move(x_move, y_move, GridEntry::X, &mut grid);
         }
 
-        show_grid(&grid);
-
-        println!("---------------------------------------- O TURN ----------------------------------------------");
         println!("");
-
-        random_move(GridEntry::O, &mut grid);
-
         show_grid(&grid);
+
+        if !check_grid(&grid) {
+            println!("---------------------------------------- O TURN ----------------------------------------------");
+
+            random_move(GridEntry::O, &mut grid);
+
+            println!("");
+            show_grid(&grid);
+        }
     }
+
+    println!("End of the game.");
 }
 
 fn init_grid() -> Vec<Vec<GridEntry>> {
@@ -74,16 +78,22 @@ fn init_grid() -> Vec<Vec<GridEntry>> {
 
 fn show_grid(grid: &Vec<Vec<GridEntry>>) {
 
+    println!("-------------");
     for y in 0..3 {
         for x in 0..3 {
             match grid[x][y] {
-                GridEntry::O => print!("O "),
-                GridEntry::X => print!("X "),
-                GridEntry::EMPTY => print!("  ")
+                GridEntry::O => print!("| O "),
+                GridEntry::X => print!("| X "),
+                GridEntry::EMPTY => print!("|   ")
+            }
+
+            if x == 2 {
+                println!("|");
             }
         }
-        println!("");
+        println!("-------------");
     }
+    println!("");
 
 }
 
@@ -117,6 +127,7 @@ fn make_a_move(x: usize, y: usize, grid_move: GridEntry, grid: &mut Vec<Vec<Grid
     return true;
 }
 
+// Use a tuple (bool, Option<GridEntry>) to return the winner
 fn check_grid(grid: &Vec<Vec<GridEntry>>) -> bool {
 
     for i in 0..3 {
