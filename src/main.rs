@@ -1,3 +1,4 @@
+use std::io;
 use rand::Rng;
 
 #[derive(PartialEq)]
@@ -8,7 +9,7 @@ enum GridEntry {
 }
 
 fn main() {
-    let grid: Vec<Vec<GridEntry>> = init_grid();
+    let mut grid: Vec<Vec<GridEntry>> = init_grid();
 
     show_grid(&grid);
 
@@ -16,15 +17,42 @@ fn main() {
         println!("---------------------------------------- X TURN ----------------------------------------------");
         println!("");
 
-        // ask user to make move
+        let mut x_move: String = String::new();
+        let mut y_move: String = String::new();
+        let mut validMove: bool = false;
+
+        while !validMove {
+            println!("Enter X of your move : ");
+
+            io::stdin()
+                .read_line(&mut x_move)
+                .expect("Failed to read X of the move");
+
+            println!("Enter Y of your move : ");
+
+            io::stdin()
+                .read_line(&mut y_move)
+                .expect("Failed to read Y of the move");
+
+            let x_move: usize = match x_move.trim().parse() {
+                Ok(num) => num,
+                Err(_) => continue,
+            };
+
+            let y_move: usize = match y_move.trim().parse() {
+                Ok(num) => num,
+                Err(_) => continue,
+            };
+
+            validMove = make_a_move(x_move, y_move, GridEntry::X, &mut grid);
+        }
 
         show_grid(&grid);
-
 
         println!("---------------------------------------- O TURN ----------------------------------------------");
         println!("");
 
-        // make random move (implement MinMax later)
+        random_move(GridEntry::O, &mut grid);
 
         show_grid(&grid);
     }
@@ -40,10 +68,6 @@ fn init_grid() -> Vec<Vec<GridEntry>> {
         }
         grid.push(r);
     }
-
-    make_a_move(0, 0, GridEntry::X, &mut grid);
-    make_a_move(1, 1, GridEntry::X, &mut grid);
-    make_a_move(2, 2, GridEntry::X, &mut grid);
 
     return grid;
 }
