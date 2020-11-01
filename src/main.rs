@@ -1,7 +1,7 @@
 use std::io;
 use rand::Rng;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 enum GridEntry {
     X,
     O,
@@ -13,7 +13,7 @@ fn main() {
 
     show_grid(&grid);
 
-    while !check_grid(&grid) {
+    while !check_grid(&grid).0 {
         println!("---------------------------------------- X TURN ----------------------------------------------");
 
         let mut x_move: String = String::new();
@@ -49,7 +49,7 @@ fn main() {
         println!("");
         show_grid(&grid);
 
-        if !check_grid(&grid) {
+        if !check_grid(&grid).0 {
             println!("---------------------------------------- O TURN ----------------------------------------------");
 
             random_move(GridEntry::O, &mut grid);
@@ -59,7 +59,12 @@ fn main() {
         }
     }
 
-    println!("End of the game.");
+    match check_grid(&grid).1.expect("Should be Some winner") {
+        GridEntry::X => println!("End of the game. The winner is X !"),
+        GridEntry::O => println!("End of the game. The winner is O !"),
+        _ => panic!()
+    }
+    
 }
 
 fn init_grid() -> Vec<Vec<GridEntry>> {
@@ -127,16 +132,15 @@ fn make_a_move(x: usize, y: usize, grid_move: GridEntry, grid: &mut Vec<Vec<Grid
     return true;
 }
 
-// Use a tuple (bool, Option<GridEntry>) to return the winner
-fn check_grid(grid: &Vec<Vec<GridEntry>>) -> bool {
+fn check_grid(grid: &Vec<Vec<GridEntry>>) -> (bool, Option<GridEntry>) {
 
     for i in 0..3 {
-        if grid[i][0] != GridEntry::EMPTY && grid[i][0] == grid[i][1] && grid[i][0] == grid[i][2] { return true; }
-        if grid[0][i] != GridEntry::EMPTY && grid[0][i] == grid[1][i] && grid[0][i] == grid[2][i] { return true; }
+        if grid[i][0] != GridEntry::EMPTY && grid[i][0] == grid[i][1] && grid[i][0] == grid[i][2] { return (true, Some(grid[i][0])); }
+        if grid[0][i] != GridEntry::EMPTY && grid[0][i] == grid[1][i] && grid[0][i] == grid[2][i] { return (true, Some(grid[0][i])); }
     }
 
-    if grid[0][0] != GridEntry::EMPTY && grid[0][0] == grid[1][1] && grid[0][0] == grid[2][2] { return true; }
-    if grid[0][2] != GridEntry::EMPTY && grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0] { return true; }
+    if grid[0][0] != GridEntry::EMPTY && grid[0][0] == grid[1][1] && grid[0][0] == grid[2][2] { return (true, Some(grid[0][0])); }
+    if grid[0][2] != GridEntry::EMPTY && grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0] { return (true, Some(grid[0][2])); }
 
-    return false;
+    return (false, None);
 }
