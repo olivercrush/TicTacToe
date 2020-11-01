@@ -19,9 +19,9 @@ fn main() {
 
         let mut x_move: String = String::new();
         let mut y_move: String = String::new();
-        let mut validMove: bool = false;
+        let mut valid_move: bool = false;
 
-        while !validMove {
+        while !valid_move {
             println!("Enter X of your move : ");
 
             io::stdin()
@@ -44,7 +44,7 @@ fn main() {
                 Err(_) => continue,
             };
 
-            validMove = make_a_move(x_move, y_move, GridEntry::X, &mut grid);
+            valid_move = make_a_move(x_move, y_move, GridEntry::X, &mut grid);
         }
 
         show_grid(&grid);
